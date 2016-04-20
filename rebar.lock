@@ -1,0 +1,4 @@
+[{<<"jsone">>,
+  {git,"git://github.com/sile/jsone",
+       {ref,"9526f92a817651867fdf3bedf3eddde63dfc61c3"}},
+  0}].
