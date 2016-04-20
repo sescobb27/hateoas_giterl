@@ -1,4 +1,4 @@
--module(wikiget).
+-module(hateoas_giterl).
 
 %% API exports
 -export([main/1,

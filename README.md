@@ -1,4 +1,4 @@
-wikiget
+hateoas_giterl
 =====
 
 An escript
@@ -11,4 +11,4 @@ Build
 Run
 ---
 
-    $ _build/default/bin/wikiget
+    $ _build/default/bin/hateoas_giterl
