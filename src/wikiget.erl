@@ -22,7 +22,7 @@ main(Args) ->
     ssl:start(),
     [Owner | [Repo| _]] = Args,
     Body = getIssues(Owner, Repo),
-    Json = jsone:decode(binary:list_to_bin(Body), [{object_format, map}]),
+    Json = decode(Body),
     Urls = getIssuesUrl(Json),
     IssuesMap = getEachIssue(Urls),
     printIssues(IssuesMap),
@@ -52,13 +52,18 @@ get(Link, Headers) ->
   {ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Link, FinalHeaders}, [], []),
   Body.
 
+decode(Body) ->
+  jsone:decode(binary:list_to_bin(Body), [{object_format, map}]).
+
 getAsync () ->
   receive
     {Ref, From, {Url, Headers}} when is_binary(Url)->
       Url2 = binary:bin_to_list(Url),
-      From ! {Ref, get(Url2, Headers)};
+      Body = get(Url2, Headers),
+      From ! {Ref, Body};
     {Ref, From, {Url, Headers}} ->
-      From ! {Ref, get(Url, Headers)}
+      Body = get(Url, Headers),
+      From ! {Ref, Body}
   end.
 
 getIssuesUrl (Issues) ->
@@ -77,7 +82,7 @@ getEachIssue (Urls) ->
   lists:map(fun (Ref) ->
     receive
       {Ref, Body} ->
-        jsone:decode(binary:list_to_bin(Body), [{object_format, map}])
+        decode(Body)
     end
   end, Refs).
 
